@@ -1,7 +1,8 @@
-const BOARD_SIZE = 15;
-const CELL_SIZE = 50;
-const PADDING = 40;
-const PIECE_RADIUS = 20;
+// Constantes do jogo - serão ajustadas dinamicamente
+let BOARD_SIZE = 15;
+let CELL_SIZE = 50;
+let PADDING = 40;
+let PIECE_RADIUS = 20;
 const WIN_LENGTH = 5;
 const CLICK_TOLERANCE = 15;
 
@@ -83,6 +84,28 @@ let gameState = {
     lastClickPosition: null
 };
 
+// Função para calcular tamanho do tabuleiro baseado na tela
+function calculateBoardSize() {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    
+    // Deixar margem de 40px de cada lado
+    const maxWidth = screenWidth - 80;
+    const maxHeight = screenHeight - 300; // Espaço para header e controles
+    
+    const maxSize = Math.min(maxWidth, maxHeight);
+    
+    // Calcular tamanho da célula baseado no espaço disponível
+    CELL_SIZE = Math.floor((maxSize - 80) / (BOARD_SIZE - 1));
+    
+    // Limitar tamanho mínimo e máximo da célula
+    if (CELL_SIZE < 25) CELL_SIZE = 25;
+    if (CELL_SIZE > 60) CELL_SIZE = 60;
+    
+    PADDING = CELL_SIZE * 0.8;
+    PIECE_RADIUS = CELL_SIZE * 0.4;
+}
+
 // Event Listeners
 document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.addEventListener('click', function(e) {
@@ -104,6 +127,19 @@ canvas.addEventListener('touchstart', handleTouchStart);
 canvas.addEventListener('contextmenu', handleRightClick);
 canvas.addEventListener('touchend', handleTouchEnd);
 canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+
+// Recalcular ao redimensionar tela
+window.addEventListener('resize', () => {
+    if (!setupScreen.classList.contains('hidden')) return;
+    calculateBoardSize();
+    initBoard();
+    drawBoard();
+});
+
+// Prevenir zoom no iOS
+document.addEventListener('gesturestart', function(e) {
+    e.preventDefault();
+});
 
 let touchStartTime = 0;
 let touchTimeout = null;
@@ -132,16 +168,20 @@ function handleCanvasTap(touch) {
     if (gameState.gameOver) return;
     
     const rect = canvas.getBoundingClientRect();
-    const x = touch.clientX - rect.left;
-    const y = touch.clientY - rect.top;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (touch.clientX - rect.left) * scaleX;
+    const y = (touch.clientY - rect.top) * scaleY;
     
     placePiece(x, y);
 }
 
 function handleRightClickTouch(touch) {
     const rect = canvas.getBoundingClientRect();
-    const x = touch.clientX - rect.left;
-    const y = touch.clientY - rect.top;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (touch.clientX - rect.left) * scaleX;
+    const y = (touch.clientY - rect.top) * scaleY;
     
     removePiece(x, y);
 }
@@ -194,6 +234,7 @@ function startGame() {
         { name: player2Name, color: player2Color }
     ];
     
+    calculateBoardSize();
     initBoard();
     setupScreen.classList.add('hidden');
     gameScreen.classList.remove('hidden');
@@ -204,9 +245,17 @@ function startGame() {
 function initBoard() {
     canvas.width = BOARD_SIZE * CELL_SIZE + PADDING * 2;
     canvas.height = BOARD_SIZE * CELL_SIZE + PADDING * 2;
-    gameState.board = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(0));
-    gameState.currentPlayer = 1;
-    gameState.gameOver = false;
+    
+    // Se estiver reiniciando, manter as peças
+    if (gameState.board.length === 0) {
+        gameState.board = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(0));
+    }
+    
+    if (!gameState.players.length) {
+        gameState.currentPlayer = 1;
+        gameState.gameOver = false;
+    }
+    
     winMessage.classList.add('hidden');
 }
 
@@ -215,7 +264,7 @@ function drawBoard() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = Math.max(1, CELL_SIZE / 25);
     
     for (let i = 0; i < BOARD_SIZE; i++) {
         ctx.beginPath();
@@ -249,7 +298,7 @@ function drawPiece(row, col, player) {
     ctx.fill();
     
     ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = Math.max(1, CELL_SIZE / 25);
     ctx.stroke();
 }
 
@@ -266,7 +315,8 @@ function placePiece(x, y) {
         Math.pow(x - intersectionX, 2) + Math.pow(y - intersectionY, 2)
     );
     
-    if (distance > CLICK_TOLERANCE) return;
+    const tolerance = CELL_SIZE * 0.3;
+    if (distance > tolerance) return;
     
     if (gameState.board[row][col] !== 0) return;
     
@@ -311,8 +361,10 @@ function handleCanvasClick(e) {
     if (gameState.gameOver) return;
     
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
     
     placePiece(x, y);
 }
@@ -320,8 +372,10 @@ function handleCanvasClick(e) {
 function handleRightClick(e) {
     e.preventDefault();
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
     
     removePiece(x, y);
 }
@@ -363,6 +417,8 @@ function resetGame() {
     setupScreen.classList.remove('hidden');
     gameScreen.classList.add('hidden');
     errorMessage.textContent = '';
+    gameState.board = [];
+    gameState.players = [];
 }
 
 async function captureScreen() {
