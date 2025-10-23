@@ -1,8 +1,9 @@
 const BOARD_SIZE = 15;
-const CELL_SIZE = 40;
-const PADDING = 30;
-const PIECE_RADIUS = 16;
+const CELL_SIZE = 50;
+const PADDING = 40;
+const PIECE_RADIUS = 20;
 const WIN_LENGTH = 5;
+const CLICK_TOLERANCE = 15;
 
 const setupScreen = document.getElementById('setupScreen');
 const gameScreen = document.getElementById('gameScreen');
@@ -34,9 +35,9 @@ canvas.addEventListener('contextmenu', (e) => e.preventDefault());
 
 function startGame() {
     const player1Name = document.getElementById('player1Name').value.trim();
-    const player1Color = document.getElementById('player1Color').value;
+    const player1Color = document.querySelector('input[name="player1Color"]:checked').value;
     const player2Name = document.getElementById('player2Name').value.trim();
-    const player2Color = document.getElementById('player2Color').value;
+    const player2Color = document.querySelector('input[name="player2Color"]:checked').value;
     
     if (!player1Name || !player2Name) {
         errorMessage.textContent = 'Por favor, digite os nomes dos jogadores.';
@@ -70,10 +71,11 @@ function initBoard() {
 }
 
 function drawBoard() {
-    ctx.fillStyle = '#daa520';
+    ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 1;
+    
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2;
     
     for (let i = 0; i < BOARD_SIZE; i++) {
         ctx.beginPath();
@@ -86,16 +88,6 @@ function drawBoard() {
         ctx.lineTo(PADDING + i * CELL_SIZE, PADDING + (BOARD_SIZE - 1) * CELL_SIZE);
         ctx.stroke();
     }
-    
-    const starPoints = [3, 7, 11];
-    ctx.fillStyle = '#000';
-    starPoints.forEach(x => {
-        starPoints.forEach(y => {
-            ctx.beginPath();
-            ctx.arc(PADDING + x * CELL_SIZE, PADDING + y * CELL_SIZE, 4, 0, Math.PI * 2);
-            ctx.fill();
-        });
-    });
     
     for (let row = 0; row < BOARD_SIZE; row++) {
         for (let col = 0; col < BOARD_SIZE; col++) {
@@ -115,7 +107,8 @@ function drawPiece(row, col, player) {
     ctx.arc(x, y, PIECE_RADIUS, 0, Math.PI * 2);
     ctx.fillStyle = color;
     ctx.fill();
-    ctx.strokeStyle = color === 'white' ? '#000' : '#fff';
+    
+    ctx.strokeStyle = '#000000';
     ctx.lineWidth = 2;
     ctx.stroke();
 }
@@ -126,10 +119,21 @@ function handleCanvasClick(e) {
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
+    
     const col = Math.round((x - PADDING) / CELL_SIZE);
     const row = Math.round((y - PADDING) / CELL_SIZE);
     
     if (row < 0 || row >= BOARD_SIZE || col < 0 || col >= BOARD_SIZE) return;
+    
+    const intersectionX = PADDING + col * CELL_SIZE;
+    const intersectionY = PADDING + row * CELL_SIZE;
+    
+    const distance = Math.sqrt(
+        Math.pow(x - intersectionX, 2) + Math.pow(y - intersectionY, 2)
+    );
+    
+    if (distance > CLICK_TOLERANCE) return;
+    
     if (gameState.board[row][col] !== 0) return;
     
     gameState.board[row][col] = gameState.currentPlayer;
