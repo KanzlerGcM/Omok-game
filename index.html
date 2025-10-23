@@ -10,117 +10,123 @@
     <!-- Tela de Configuração -->
     <div id="setupScreen" class="screen">
         <div class="setup-container">
-            <h1>Omok (Gomoku)</h1>
+            <div class="language-selector">
+                <button class="lang-btn active" data-lang="en">English</button>
+                <button class="lang-btn" data-lang="ko">한국어</button>
+                <button class="lang-btn" data-lang="pt">Português</button>
+            </div>
+            
+            <h1 data-i18n="title">Omok (Gomoku)</h1>
             <div class="setup-form">
                 <div class="form-group">
-                    <label for="player1Name">Nome do Jogador 1:</label>
-                    <input type="text" id="player1Name" value="Jogador 1" maxlength="20">
+                    <label for="player1Name" data-i18n="player1Name">Player 1 Name:</label>
+                    <input type="text" id="player1Name" value="Player 1" maxlength="20">
                 </div>
                 <div class="form-group">
-                    <label>Cor do Jogador 1:</label>
+                    <label data-i18n="player1Color">Player 1 Color:</label>
                     <div class="color-palette">
                         <input type="radio" name="player1Color" value="#000000" id="p1c1" checked>
-                        <label for="p1c1" style="background: #000000;"></label>
+                        <label for="p1c1" style="background: #000000;" title="Black"></label>
                         
                         <input type="radio" name="player1Color" value="#FFFFFF" id="p1c2">
-                        <label for="p1c2" style="background: #FFFFFF;"></label>
+                        <label for="p1c2" style="background: #FFFFFF; border: 2px solid #ddd;" title="White"></label>
                         
                         <input type="radio" name="player1Color" value="#FF0000" id="p1c3">
-                        <label for="p1c3" style="background: #FF0000;"></label>
+                        <label for="p1c3" style="background: #FF0000;" title="Red"></label>
                         
                         <input type="radio" name="player1Color" value="#00FF00" id="p1c4">
-                        <label for="p1c4" style="background: #00FF00;"></label>
+                        <label for="p1c4" style="background: #00FF00;" title="Green"></label>
                         
                         <input type="radio" name="player1Color" value="#0000FF" id="p1c5">
-                        <label for="p1c5" style="background: #0000FF;"></label>
+                        <label for="p1c5" style="background: #0000FF;" title="Blue"></label>
                         
                         <input type="radio" name="player1Color" value="#FFFF00" id="p1c6">
-                        <label for="p1c6" style="background: #FFFF00;"></label>
+                        <label for="p1c6" style="background: #FFFF00;" title="Yellow"></label>
                         
                         <input type="radio" name="player1Color" value="#FF00FF" id="p1c7">
-                        <label for="p1c7" style="background: #FF00FF;"></label>
+                        <label for="p1c7" style="background: #FF00FF;" title="Magenta"></label>
                         
                         <input type="radio" name="player1Color" value="#00FFFF" id="p1c8">
-                        <label for="p1c8" style="background: #00FFFF;"></label>
+                        <label for="p1c8" style="background: #00FFFF;" title="Cyan"></label>
                         
                         <input type="radio" name="player1Color" value="#FFA500" id="p1c9">
-                        <label for="p1c9" style="background: #FFA500;"></label>
+                        <label for="p1c9" style="background: #FFA500;" title="Orange"></label>
                         
                         <input type="radio" name="player1Color" value="#800080" id="p1c10">
-                        <label for="p1c10" style="background: #800080;"></label>
+                        <label for="p1c10" style="background: #800080;" title="Purple"></label>
                         
                         <input type="radio" name="player1Color" value="#FFC0CB" id="p1c11">
-                        <label for="p1c11" style="background: #FFC0CB;"></label>
+                        <label for="p1c11" style="background: #FFC0CB;" title="Pink"></label>
                         
                         <input type="radio" name="player1Color" value="#8B4513" id="p1c12">
-                        <label for="p1c12" style="background: #8B4513;"></label>
+                        <label for="p1c12" style="background: #8B4513;" title="Brown"></label>
                         
                         <input type="radio" name="player1Color" value="#808080" id="p1c13">
-                        <label for="p1c13" style="background: #808080;"></label>
+                        <label for="p1c13" style="background: #808080;" title="Gray"></label>
                         
                         <input type="radio" name="player1Color" value="#FFD700" id="p1c14">
-                        <label for="p1c14" style="background: #FFD700;"></label>
+                        <label for="p1c14" style="background: #FFD700;" title="Gold"></label>
                         
                         <input type="radio" name="player1Color" value="#4B0082" id="p1c15">
-                        <label for="p1c15" style="background: #4B0082;"></label>
+                        <label for="p1c15" style="background: #4B0082;" title="Indigo"></label>
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="player2Name">Nome do Jogador 2:</label>
-                    <input type="text" id="player2Name" value="Jogador 2" maxlength="20">
+                    <label for="player2Name" data-i18n="player2Name">Player 2 Name:</label>
+                    <input type="text" id="player2Name" value="Player 2" maxlength="20">
                 </div>
                 <div class="form-group">
-                    <label>Cor do Jogador 2:</label>
+                    <label data-i18n="player2Color">Player 2 Color:</label>
                     <div class="color-palette">
                         <input type="radio" name="player2Color" value="#000000" id="p2c1">
-                        <label for="p2c1" style="background: #000000;"></label>
+                        <label for="p2c1" style="background: #000000;" title="Black"></label>
                         
                         <input type="radio" name="player2Color" value="#FFFFFF" id="p2c2" checked>
-                        <label for="p2c2" style="background: #FFFFFF;"></label>
+                        <label for="p2c2" style="background: #FFFFFF; border: 2px solid #ddd;" title="White"></label>
                         
                         <input type="radio" name="player2Color" value="#FF0000" id="p2c3">
-                        <label for="p2c3" style="background: #FF0000;"></label>
+                        <label for="p2c3" style="background: #FF0000;" title="Red"></label>
                         
                         <input type="radio" name="player2Color" value="#00FF00" id="p2c4">
-                        <label for="p2c4" style="background: #00FF00;"></label>
+                        <label for="p2c4" style="background: #00FF00;" title="Green"></label>
                         
                         <input type="radio" name="player2Color" value="#0000FF" id="p2c5">
-                        <label for="p2c5" style="background: #0000FF;"></label>
+                        <label for="p2c5" style="background: #0000FF;" title="Blue"></label>
                         
                         <input type="radio" name="player2Color" value="#FFFF00" id="p2c6">
-                        <label for="p2c6" style="background: #FFFF00;"></label>
+                        <label for="p2c6" style="background: #FFFF00;" title="Yellow"></label>
                         
                         <input type="radio" name="player2Color" value="#FF00FF" id="p2c7">
-                        <label for="p2c7" style="background: #FF00FF;"></label>
+                        <label for="p2c7" style="background: #FF00FF;" title="Magenta"></label>
                         
                         <input type="radio" name="player2Color" value="#00FFFF" id="p2c8">
-                        <label for="p2c8" style="background: #00FFFF;"></label>
+                        <label for="p2c8" style="background: #00FFFF;" title="Cyan"></label>
                         
                         <input type="radio" name="player2Color" value="#FFA500" id="p2c9">
-                        <label for="p2c9" style="background: #FFA500;"></label>
+                        <label for="p2c9" style="background: #FFA500;" title="Orange"></label>
                         
                         <input type="radio" name="player2Color" value="#800080" id="p2c10">
-                        <label for="p2c10" style="background: #800080;"></label>
+                        <label for="p2c10" style="background: #800080;" title="Purple"></label>
                         
                         <input type="radio" name="player2Color" value="#FFC0CB" id="p2c11">
-                        <label for="p2c11" style="background: #FFC0CB;"></label>
+                        <label for="p2c11" style="background: #FFC0CB;" title="Pink"></label>
                         
                         <input type="radio" name="player2Color" value="#8B4513" id="p2c12">
-                        <label for="p2c12" style="background: #8B4513;"></label>
+                        <label for="p2c12" style="background: #8B4513;" title="Brown"></label>
                         
                         <input type="radio" name="player2Color" value="#808080" id="p2c13">
-                        <label for="p2c13" style="background: #808080;"></label>
+                        <label for="p2c13" style="background: #808080;" title="Gray"></label>
                         
                         <input type="radio" name="player2Color" value="#FFD700" id="p2c14">
-                        <label for="p2c14" style="background: #FFD700;"></label>
+                        <label for="p2c14" style="background: #FFD700;" title="Gold"></label>
                         
                         <input type="radio" name="player2Color" value="#4B0082" id="p2c15">
-                        <label for="p2c15" style="background: #4B0082;"></label>
+                        <label for="p2c15" style="background: #4B0082;" title="Indigo"></label>
                     </div>
                 </div>
                 
-                <button id="startButton" class="btn">Iniciar Jogo</button>
+                <button id="startButton" class="btn" data-i18n="startGame">Start Game</button>
                 <div id="errorMessage" class="error-message"></div>
             </div>
         </div>
@@ -130,7 +136,7 @@
     <div id="gameScreen" class="screen hidden">
         <div class="game-container">
             <div class="game-header">
-                <h1>Omok (Gomoku)</h1>
+                <h1 data-i18n="title">Omok (Gomoku)</h1>
                 <div class="player-info">
                     <div class="player-turn">
                         <span id="currentPlayerName"></span>
@@ -138,8 +144,8 @@
                     </div>
                 </div>
                 <div class="controls">
-                    <button id="captureButton" class="btn">📸 Capturar Tela</button>
-                    <button id="restartButton" class="btn">🔄 Novo Jogo</button>
+                    <button id="captureButton" class="btn" data-i18n="capture">📸 Capture Screen</button>
+                    <button id="restartButton" class="btn" data-i18n="newGame">🔄 New Game</button>
                 </div>
             </div>
             <canvas id="gameBoard"></canvas>
