@@ -1,196 +1,64 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omok (Gomoku)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="setupScreen" class="screen">
+        <div class="setup-container">
+            <h1>Omok (Gomoku)</h1>
+            <div class="setup-form">
+                <div class="form-group">
+                    <label for="player1Name">Nome do Jogador 1:</label>
+                    <input type="text" id="player1Name" value="Jogador 1" maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label for="player1Color">Cor do Jogador 1:</label>
+                    <select id="player1Color">
+                        <option value="black">Preto</option>
+                        <option value="white">Branco</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="player2Name">Nome do Jogador 2:</label>
+                    <input type="text" id="player2Name" value="Jogador 2" maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label for="player2Color">Cor do Jogador 2:</label>
+                    <select id="player2Color">
+                        <option value="white">Branco</option>
+                        <option value="black">Preto</option>
+                    </select>
+                </div>
+                <button id="startButton" class="btn">Iniciar Jogo</button>
+                <div id="errorMessage" class="error-message"></div>
+            </div>
+        </div>
+    </div>
 
-body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    <div id="gameScreen" class="screen hidden">
+        <div class="game-container">
+            <div class="game-header">
+                <h1>Omok (Gomoku)</h1>
+                <div class="player-info">
+                    <div class="player-turn">
+                        <span id="currentPlayerName"></span>
+                        <div id="currentPlayerPiece" class="piece-indicator"></div>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button id="captureButton" class="btn">📸 Capturar Tela</button>
+                    <button id="restartButton" class="btn">🔄 Novo Jogo</button>
+                </div>
+            </div>
+            <canvas id="gameBoard"></canvas>
+            <div id="winMessage" class="win-message hidden"></div>
+        </div>
+    </div>
 
-.screen {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* Setup Screen */
-.setup-container {
-    background: white;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    max-width: 500px;
-    width: 100%;
-}
-
-.setup-container h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #333;
-    font-size: 2em;
-}
-
-.setup-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.form-group label {
-    font-weight: bold;
-    color: #333;
-}
-
-.form-group input,
-.form-group select {
-    padding: 12px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: border-color 0.3s;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    outline: none;
-    border-color: #333;
-}
-
-.btn {
-    padding: 15px 30px;
-    background: #333;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.1s;
-}
-
-.btn:hover {
-    background: #555;
-}
-
-.btn:active {
-    transform: scale(0.98);
-}
-
-.error-message {
-    color: #d32f2f;
-    text-align: center;
-    min-height: 20px;
-    font-size: 14px;
-}
-
-/* Game Screen */
-.game-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-}
-
-.game-header {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 100%;
-    max-width: 700px;
-}
-
-.game-header h1 {
-    color: #333;
-    margin-bottom: 15px;
-}
-
-.player-info {
-    margin: 15px 0;
-}
-
-.player-turn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-}
-
-.piece-indicator {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 2px solid #333;
-}
-
-.controls {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 15px;
-}
-
-#gameBoard {
-    background: #daa520;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    cursor: crosshair;
-}
-
-.win-message {
-    background: white;
-    padding: 30px 50px;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-}
-
-@media (max-width: 768px) {
-    .setup-container {
-        padding: 30px 20px;
-    }
-    
-    .game-header {
-        padding: 15px;
-    }
-    
-    .controls {
-        flex-direction: column;
-    }
-    
-    .btn {
-        width: 100%;
-    }
-}
+    <script src="script.js"></script>
+</body>
+</html>
