@@ -26,12 +26,13 @@ body {
     display: none !important;
 }
 
+/* Setup Screen */
 .setup-container {
     background: white;
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    max-width: 500px;
+    max-width: 600px;
     width: 100%;
 }
 
@@ -45,22 +46,22 @@ body {
 .setup-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
 }
 
 .form-group label {
     font-weight: bold;
     color: #333;
+    font-size: 14px;
 }
 
-.form-group input,
-.form-group select {
+.form-group input[type="text"] {
     padding: 12px;
     border: 2px solid #ddd;
     border-radius: 5px;
@@ -68,10 +69,41 @@ body {
     transition: border-color 0.3s;
 }
 
-.form-group input:focus,
-.form-group select:focus {
+.form-group input[type="text"]:focus {
     outline: none;
     border-color: #333;
+}
+
+/* Color Palette */
+.color-palette {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+.color-palette input[type="radio"] {
+    display: none;
+}
+
+.color-palette label {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.color-palette label:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.color-palette input[type="radio"]:checked + label {
+    border: 3px solid #333;
+    box-shadow: 0 0 0 2px white, 0 0 0 5px #333;
+    transform: scale(1.15);
 }
 
 .btn {
@@ -101,11 +133,13 @@ body {
     font-size: 14px;
 }
 
+/* Game Screen */
 .game-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
+    width: 100%;
 }
 
 .game-header {
@@ -115,7 +149,7 @@ body {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 100%;
-    max-width: 700px;
+    max-width: 900px;
 }
 
 .game-header h1 {
@@ -153,8 +187,8 @@ body {
 }
 
 #gameBoard {
-    background: #daa520;
-    border-radius: 10px;
+    background: #FFFFFF;
+    border-radius: 5px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     cursor: crosshair;
 }
@@ -190,5 +224,9 @@ body {
     
     .btn {
         width: 100%;
+    }
+    
+    .color-palette {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
