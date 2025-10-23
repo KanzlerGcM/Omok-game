@@ -26,7 +26,6 @@ body {
     display: none !important;
 }
 
-/* Setup Screen */
 .setup-container {
     background: white;
     padding: 40px;
@@ -102,7 +101,6 @@ body {
     font-size: 14px;
 }
 
-/* Game Screen */
 .game-container {
     display: flex;
     flex-direction: column;
