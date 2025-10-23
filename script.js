@@ -5,6 +5,63 @@ const PIECE_RADIUS = 20;
 const WIN_LENGTH = 5;
 const CLICK_TOLERANCE = 15;
 
+// Traduções
+const translations = {
+    en: {
+        title: "Omok (Gomoku)",
+        player1Name: "Player 1 Name:",
+        player1Color: "Player 1 Color:",
+        player2Name: "Player 2 Name:",
+        player2Color: "Player 2 Color:",
+        startGame: "Start Game",
+        capture: "📸 Capture Screen",
+        newGame: "🔄 New Game",
+        turn: "Turn:",
+        won: "won!",
+        errorNames: "Please enter both player names.",
+        errorColors: "Players must choose different colors.",
+        player1Default: "Player 1",
+        player2Default: "Player 2",
+        captured: "✅ Captured!"
+    },
+    ko: {
+        title: "오목 (Gomoku)",
+        player1Name: "플레이어 1 이름:",
+        player1Color: "플레이어 1 색상:",
+        player2Name: "플레이어 2 이름:",
+        player2Color: "플레이어 2 색상:",
+        startGame: "게임 시작",
+        capture: "📸 화면 캡처",
+        newGame: "🔄 새 게임",
+        turn: "차례:",
+        won: "승리!",
+        errorNames: "두 플레이어의 이름을 입력하세요.",
+        errorColors: "플레이어는 서로 다른 색상을 선택해야 합니다.",
+        player1Default: "플레이어 1",
+        player2Default: "플레이어 2",
+        captured: "✅ 캡처됨!"
+    },
+    pt: {
+        title: "Omok (Gomoku)",
+        player1Name: "Nome do Jogador 1:",
+        player1Color: "Cor do Jogador 1:",
+        player2Name: "Nome do Jogador 2:",
+        player2Color: "Cor do Jogador 2:",
+        startGame: "Iniciar Jogo",
+        capture: "📸 Capturar Tela",
+        newGame: "🔄 Novo Jogo",
+        turn: "Vez de:",
+        won: "venceu!",
+        errorNames: "Por favor, digite os nomes dos jogadores.",
+        errorColors: "Os jogadores devem escolher cores diferentes.",
+        player1Default: "Jogador 1",
+        player2Default: "Jogador 2",
+        captured: "✅ Copiado!"
+    }
+};
+
+let currentLang = 'en';
+
 const setupScreen = document.getElementById('setupScreen');
 const gameScreen = document.getElementById('gameScreen');
 const startButton = document.getElementById('startButton');
@@ -26,6 +83,16 @@ let gameState = {
     lastClickPosition: null
 };
 
+// Event Listeners
+document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentLang = btn.dataset.lang;
+        updateLanguage();
+    });
+});
+
 startButton.addEventListener('click', startGame);
 captureButton.addEventListener('click', captureScreen);
 restartButton.addEventListener('click', resetGame);
@@ -33,19 +100,42 @@ canvas.addEventListener('click', handleCanvasClick);
 canvas.addEventListener('contextmenu', handleRightClick);
 canvas.addEventListener('contextmenu', (e) => e.preventDefault());
 
+// Atualizar idioma
+function updateLanguage() {
+    const trans = translations[currentLang];
+    document.querySelectorAll('[data-i18n]').forEach(elem => {
+        const key = elem.getAttribute('data-i18n');
+        if (trans[key]) {
+            elem.textContent = trans[key];
+        }
+    });
+    
+    document.getElementById('player1Name').placeholder = trans.player1Default;
+    document.getElementById('player2Name').placeholder = trans.player2Default;
+}
+
 function startGame() {
+    const trans = translations[currentLang];
     const player1Name = document.getElementById('player1Name').value.trim();
-    const player1Color = document.querySelector('input[name="player1Color"]:checked').value;
+    const player1ColorElem = document.querySelector('input[name="player1Color"]:checked');
     const player2Name = document.getElementById('player2Name').value.trim();
-    const player2Color = document.querySelector('input[name="player2Color"]:checked').value;
+    const player2ColorElem = document.querySelector('input[name="player2Color"]:checked');
+    
+    if (!player1ColorElem || !player2ColorElem) {
+        errorMessage.textContent = trans.errorColors;
+        return;
+    }
+    
+    const player1Color = player1ColorElem.value;
+    const player2Color = player2ColorElem.value;
     
     if (!player1Name || !player2Name) {
-        errorMessage.textContent = 'Por favor, digite os nomes dos jogadores.';
+        errorMessage.textContent = trans.errorNames;
         return;
     }
     
     if (player1Color === player2Color) {
-        errorMessage.textContent = 'Os jogadores devem escolher cores diferentes.';
+        errorMessage.textContent = trans.errorColors;
         return;
     }
     
@@ -142,7 +232,8 @@ function handleCanvasClick(e) {
     if (checkWin(row, col)) {
         gameState.gameOver = true;
         const winner = gameState.players[gameState.currentPlayer - 1];
-        winMessage.textContent = `🎉 ${winner.name} venceu! 🎉`;
+        const trans = translations[currentLang];
+        winMessage.textContent = `🎉 ${winner.name} ${trans.won} 🎉`;
         winMessage.classList.remove('hidden');
         return;
     }
@@ -203,8 +294,9 @@ function checkWin(row, col) {
 }
 
 function updatePlayerInfo() {
+    const trans = translations[currentLang];
     const player = gameState.players[gameState.currentPlayer - 1];
-    currentPlayerName.textContent = `Vez de: ${player.name}`;
+    currentPlayerName.textContent = `${trans.turn} ${player.name}`;
     currentPlayerPiece.style.backgroundColor = player.color;
 }
 
@@ -215,6 +307,7 @@ function resetGame() {
 }
 
 async function captureScreen() {
+    const trans = translations[currentLang];
     try {
         const tempCanvas = document.createElement('canvas');
         tempCanvas.width = canvas.width;
@@ -228,17 +321,20 @@ async function captureScreen() {
                     new ClipboardItem({'image/png': blob})
                 ]);
                 const originalText = captureButton.textContent;
-                captureButton.textContent = '✅ Copiado!';
+                captureButton.textContent = trans.captured;
                 captureButton.style.background = '#4caf50';
                 setTimeout(() => {
                     captureButton.textContent = originalText;
                     captureButton.style.background = '#333';
                 }, 2000);
             } catch (err) {
-                alert('Erro ao copiar para área de transferência.');
+                alert('Error copying to clipboard.');
             }
         }, 'image/png');
     } catch (err) {
-        alert('Erro ao capturar tela.');
+        alert('Error capturing screen.');
     }
 }
+
+// Inicializar idioma
+updateLanguage();
