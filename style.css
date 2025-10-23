@@ -26,6 +26,35 @@ body {
     display: none !important;
 }
 
+/* Language Selector */
+.language-selector {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.lang-btn {
+    padding: 8px 16px;
+    background: #f0f0f0;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.lang-btn:hover {
+    background: #e0e0e0;
+}
+
+.lang-btn.active {
+    background: #333;
+    color: white;
+    border-color: #333;
+}
+
 /* Setup Screen */
 .setup-container {
     background: white;
