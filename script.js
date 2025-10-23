@@ -24,23 +24,6 @@ const translations = {
         player2Default: "Player 2",
         captured: "✅ Captured!"
     },
-    ko: {
-        title: "오목 (Gomoku)",
-        player1Name: "플레이어 1 이름:",
-        player1Color: "플레이어 1 색상:",
-        player2Name: "플레이어 2 이름:",
-        player2Color: "플레이어 2 색상:",
-        startGame: "게임 시작",
-        capture: "📸 화면 캡처",
-        newGame: "🔄 새 게임",
-        turn: "차례:",
-        won: "승리!",
-        errorNames: "두 플레이어의 이름을 입력하세요.",
-        errorColors: "플레이어는 서로 다른 색상을 선택해야 합니다.",
-        player1Default: "플레이어 1",
-        player2Default: "플레이어 2",
-        captured: "✅ 캡처됨!"
-    },
     pt: {
         title: "Omok (Gomoku)",
         player1Name: "Nome do Jogador 1:",
@@ -57,6 +40,23 @@ const translations = {
         player1Default: "Jogador 1",
         player2Default: "Jogador 2",
         captured: "✅ Copiado!"
+    },
+    ko: {
+        title: "오목 (Gomoku)",
+        player1Name: "플레이어 1 이름:",
+        player1Color: "플레이어 1 색상:",
+        player2Name: "플레이어 2 이름:",
+        player2Color: "플레이어 2 색상:",
+        startGame: "게임 시작",
+        capture: "📸 화면 캡처",
+        newGame: "🔄 새 게임",
+        turn: "차례:",
+        won: "승리!",
+        errorNames: "두 플레이어의 이름을 입력하세요.",
+        errorColors: "플레이어는 서로 다른 색상을 선택해야 합니다.",
+        player1Default: "플레이어 1",
+        player2Default: "플레이어 2",
+        captured: "✅ 캡처됨!"
     }
 };
 
@@ -85,10 +85,11 @@ let gameState = {
 
 // Event Listeners
 document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentLang = btn.dataset.lang;
+        this.classList.add('active');
+        currentLang = this.getAttribute('data-lang');
         updateLanguage();
     });
 });
@@ -96,9 +97,54 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 startButton.addEventListener('click', startGame);
 captureButton.addEventListener('click', captureScreen);
 restartButton.addEventListener('click', resetGame);
+
+// Suporte para touch e mouse
 canvas.addEventListener('click', handleCanvasClick);
+canvas.addEventListener('touchstart', handleTouchStart);
 canvas.addEventListener('contextmenu', handleRightClick);
+canvas.addEventListener('touchend', handleTouchEnd);
 canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+
+let touchStartTime = 0;
+let touchTimeout = null;
+
+function handleTouchStart(e) {
+    e.preventDefault();
+    touchStartTime = Date.now();
+    const touch = e.touches[0];
+    
+    touchTimeout = setTimeout(() => {
+        handleRightClickTouch(touch);
+    }, 500);
+}
+
+function handleTouchEnd(e) {
+    e.preventDefault();
+    clearTimeout(touchTimeout);
+    
+    if (Date.now() - touchStartTime < 500) {
+        const touch = e.changedTouches[0];
+        handleCanvasTap(touch);
+    }
+}
+
+function handleCanvasTap(touch) {
+    if (gameState.gameOver) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    
+    placePiece(x, y);
+}
+
+function handleRightClickTouch(touch) {
+    const rect = canvas.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    
+    removePiece(x, y);
+}
 
 // Atualizar idioma
 function updateLanguage() {
@@ -106,12 +152,16 @@ function updateLanguage() {
     document.querySelectorAll('[data-i18n]').forEach(elem => {
         const key = elem.getAttribute('data-i18n');
         if (trans[key]) {
-            elem.textContent = trans[key];
+            if (elem.tagName === 'INPUT') {
+                elem.value = trans[key];
+            } else {
+                elem.textContent = trans[key];
+            }
         }
     });
     
-    document.getElementById('player1Name').placeholder = trans.player1Default;
-    document.getElementById('player2Name').placeholder = trans.player2Default;
+    document.getElementById('player1Name').value = trans.player1Default;
+    document.getElementById('player2Name').value = trans.player2Default;
 }
 
 function startGame() {
@@ -203,13 +253,7 @@ function drawPiece(row, col, player) {
     ctx.stroke();
 }
 
-function handleCanvasClick(e) {
-    if (gameState.gameOver) return;
-    
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
+function placePiece(x, y) {
     const col = Math.round((x - PADDING) / CELL_SIZE);
     const row = Math.round((y - PADDING) / CELL_SIZE);
     
@@ -242,11 +286,7 @@ function handleCanvasClick(e) {
     updatePlayerInfo();
 }
 
-function handleRightClick(e) {
-    e.preventDefault();
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+function removePiece(x, y) {
     const col = Math.round((x - PADDING) / CELL_SIZE);
     const row = Math.round((y - PADDING) / CELL_SIZE);
     
@@ -265,6 +305,25 @@ function handleRightClick(e) {
         gameState.lastClickTime = now;
         gameState.lastClickPosition = position;
     }
+}
+
+function handleCanvasClick(e) {
+    if (gameState.gameOver) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    placePiece(x, y);
+}
+
+function handleRightClick(e) {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    removePiece(x, y);
 }
 
 function checkWin(row, col) {
