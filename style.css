@@ -11,6 +11,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .screen {
@@ -35,24 +36,31 @@ body {
 }
 
 .lang-btn {
-    padding: 8px 16px;
+    padding: 10px 20px;
     background: #f0f0f0;
-    border: 2px solid #ddd;
-    border-radius: 5px;
+    border: 3px solid #ddd;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 32px;
     transition: all 0.3s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
 }
 
 .lang-btn:hover {
     background: #e0e0e0;
+    transform: scale(1.05);
+}
+
+.lang-btn:active {
+    transform: scale(0.95);
 }
 
 .lang-btn.active {
     background: #333;
-    color: white;
     border-color: #333;
+    box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.2);
 }
 
 /* Setup Screen */
@@ -122,11 +130,16 @@ body {
     border: 3px solid transparent;
     transition: all 0.3s;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    touch-action: manipulation;
 }
 
 .color-palette label:hover {
     transform: scale(1.1);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.color-palette label:active {
+    transform: scale(1.05);
 }
 
 .color-palette input[type="radio"]:checked + label {
@@ -145,6 +158,9 @@ body {
     font-weight: bold;
     cursor: pointer;
     transition: background 0.3s, transform 0.1s;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .btn:hover {
@@ -220,6 +236,7 @@ body {
     border-radius: 5px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     cursor: crosshair;
+    touch-action: none;
 }
 
 .win-message {
@@ -257,5 +274,16 @@ body {
     
     .color-palette {
         grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+    
+    .color-palette label {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .lang-btn {
+        font-size: 28px;
+        padding: 8px 16px;
     }
 }
